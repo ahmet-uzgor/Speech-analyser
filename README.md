@@ -17,13 +17,13 @@ The Political Speeches Evaluation is a Nest.js application that calculates stati
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/your-username/political-speeches-evaluation.git
+   git clone https://github.com/ahmet-uzgor/Speech-analyser.git
    ```
 
 2. Navigate to the project directory:
 
    ```bash
-   cd political-speeches-evaluation
+   cd Speech-analyser
    ```
 
 3. Install the dependencies:
@@ -56,7 +56,7 @@ The Political Speeches Evaluation is a Nest.js application that calculates stati
    - Replace `url1`, `url2`, etc. with the URLs of the CSV files you want to evaluate.
    - You can pass multiple URLs as query parameters to evaluate multiple files.
 
-4. The endpoint will return a JSON object containing the calculated statistics:
+4. The endpoint will return a JSON object containing the calculated statistics like below example:
 
    ```json
    {
