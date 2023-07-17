@@ -30,8 +30,8 @@ describe('EvaluationController', () => {
       Alexander Abel,Education Policy,2012-10-30,5310
       Bernhard Belling,Coal Subsidies,2012-11-05,1210
       Caesare Collins,Coal Subsidies,2012-11-06,1119
-      Alexander Abel,Internal Security,2012-12-11,911
-    `;
+      Alexander Abel,Internal Security,2012-12-11,911`;
+
     const csvUrl = 'https://example.com/politics.csv';
     const csvResponse: AxiosResponse = {
       data: csvData,
@@ -72,15 +72,15 @@ describe('EvaluationController', () => {
       expect(result.mostSecurity).toEqual(expected);
     });
 
-    // it('should calculate the politician with the fewest words', async () => {
-    //   const urls = [csvUrl];
-    //   const expected = 'Alexander Abel';
+    it('should calculate the politician with the fewest words', async () => {
+      const urls = [csvUrl];
+      const expected = 'Caesare Collins';
 
-    //   const result = await controller.evaluateSpeeches({ url: urls });
+      const result = await controller.evaluateSpeeches({ url: urls });
 
-    //   expect(httpService.get).toHaveBeenCalledWith(csvUrl);
-    //   expect(result.leastWordy).toEqual(expected);
-    // });
+      expect(httpService.get).toHaveBeenCalledWith(csvUrl);
+      expect(result.leastWordy).toEqual(expected);
+    });
 
     it('should return null for questions without unambiguous solutions', async () => {
       const urls = [csvUrl];
