@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { AxiosResponse } from 'axios';
 import { EvaluateSpeechQuery } from './evaluate-speech-query.model';
@@ -16,6 +16,10 @@ export class EvaluationService {
   ): Promise<EvaluateSpeechResponse> {
     const { url } = evaluateSpeechQuery;
 
+    if (!url) {
+      throw new BadRequestException('csv urls is not given in query');
+    }
+
     const speeches: Speech[] = await this.downloadAndParseCSVs(url);
 
     return {
@@ -31,16 +35,32 @@ export class EvaluationService {
   private async downloadAndParseCSVs(
     url: string | string[],
   ): Promise<Speech[]> {
+    // if there is only one url then set urls as array to handle it
     const urls = typeof url === 'string' ? [url] : url;
-    const responses: AxiosResponse[] = await Promise.all(
-      urls?.map((url) => lastValueFrom(this.httpService.get(url))),
-    );
+    const responses: AxiosResponse[] = [];
+
+    for (let i = 0; i < urls.length; i++) {
+      try {
+        responses.push(await lastValueFrom(this.httpService.get(urls[i])));
+      } catch (_) {
+        // it caches error if any of url is broken or not found,
+        // it provides taking all datas from valid download urls
+      }
+    }
+
+    // if there is no data or all urls are broken then throws an exception
+    if (responses.length < 1) {
+      throw new BadRequestException('Given urls are broken or not found');
+    }
 
     const speeches: Speech[] = [];
 
+    // it parses all csv data which is downloaded and adds to speeches
+    // papaparse library has built-in methods to fix problems on parsing
     for (const response of responses) {
-      const parsed: any = parse(response.data, {
+      const parsed = parse<Speech>(response.data, {
         header: true,
+        // it changes number in string to number
         dynamicTyping: true,
         skipEmptyLines: true,
         // it checks whether headers first char is empty space or not and fix it
@@ -65,6 +85,7 @@ export class EvaluationService {
     speeches: Speech[],
     year: number,
   ): string {
+    // it filters speeches in specific given year parameter
     const speechesInYear = speeches.filter(
       (speech) => new Date(speech.Date).getFullYear() === year,
     );
@@ -92,6 +113,7 @@ export class EvaluationService {
     speeches: Speech[],
     topic: string,
   ): string {
+    // it filters speeches in specific given topic param
     const speechesOnTopic = speeches.filter((speech) => speech.Topic === topic);
 
     if (speechesOnTopic.length === 0) {
@@ -113,7 +135,7 @@ export class EvaluationService {
       : null;
   }
 
-  private getPoliticianWithFewestWords(speeches: any[]): string {
+  private getPoliticianWithFewestWords(speeches: Speech[]): string {
     if (speeches.length === 0) {
       return null;
     }
