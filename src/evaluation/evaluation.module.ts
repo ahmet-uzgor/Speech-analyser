@@ -4,11 +4,7 @@ import { EvaluationService } from './evaluation.service';
 import { HttpModule } from '@nestjs/axios';
 
 @Module({
-  imports: [
-    HttpModule.register({
-      validateStatus: (status: number) => status < 500,
-    }),
-  ],
+  imports: [HttpModule],
   controllers: [EvaluationController],
   providers: [EvaluationService],
 })
