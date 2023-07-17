@@ -65,13 +65,12 @@ export class EvaluationService {
         skipEmptyLines: true,
         // it checks whether headers first char is empty space or not and fix it
         transformHeader: function (header) {
-          header = header[0] === ' ' ? header.slice(1) : header;
+          header = header.trimStart();
           return header;
         },
         // it checks whether values first char is empty space or not and fix it
         transform: function (value) {
-          value = value[0] === ' ' ? value.slice(1) : value;
-          return value;
+          return value.trimStart();
         },
       }).data;
 
