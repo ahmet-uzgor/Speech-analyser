@@ -1,9 +1,9 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { AxiosResponse } from 'axios';
-import { EvaluateSpeechQuery } from './evaluate-speech-query.model';
-import { EvaluateSpeechResponse } from './evaluate-speech-response.model';
-import { Speech } from './speech.model';
+import { EvaluateSpeechQuery } from './models/evaluate-speech-query.model';
+import { EvaluateSpeechResponse } from './models/evaluate-speech-response.model';
+import { Speech } from './models/speech.model';
 import { parse } from 'papaparse';
 import { lastValueFrom } from 'rxjs';
 
@@ -80,7 +80,7 @@ export class EvaluationService {
     return speeches;
   }
 
-  private getPoliticianWithMostSpeechesInYear(
+  getPoliticianWithMostSpeechesInYear(
     speeches: Speech[],
     year: number,
   ): string {
@@ -108,7 +108,7 @@ export class EvaluationService {
       : null;
   }
 
-  private getPoliticianWithMostSpeechesOnTopic(
+  getPoliticianWithMostSpeechesOnTopic(
     speeches: Speech[],
     topic: string,
   ): string {
@@ -134,7 +134,7 @@ export class EvaluationService {
       : null;
   }
 
-  private getPoliticianWithFewestWords(speeches: Speech[]): string {
+  getPoliticianWithFewestWords(speeches: Speech[]): string {
     if (speeches.length === 0) {
       return null;
     }

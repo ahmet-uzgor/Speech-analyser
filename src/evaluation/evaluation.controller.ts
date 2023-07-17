@@ -1,5 +1,5 @@
 import { Controller, Get, Query } from '@nestjs/common';
-import { EvaluateSpeechQuery } from './evaluate-speech-query.model';
+import { EvaluateSpeechQuery } from './models/evaluate-speech-query.model';
 import { EvaluationService } from './evaluation.service';
 
 @Controller('evaluation')
